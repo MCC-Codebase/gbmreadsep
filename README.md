@@ -1,230 +1,186 @@
 # GBMReadSep
 
-**GBMReadSep** assigns bulk DNA sequencing reads to **tumor** vs **non-tumor (TME/normal)** using a
-Bayesian evidence model driven by **somatic SNV anchor variants**.
+GBMReadSep assigns each sequencing read to **tumor**, **TME (non-tumor)**, or **uncertain** using somatic SNV anchors. It is designed for biologists who want clear, repeatable steps from **install → run → interpret → troubleshoot**.
 
-It produces:
+If you are new here, start with:
 
-- **Per-read posterior** probability `P(tumor | evidence)` and a discrete class (`T`, `N`, `U`).
-- Optionally: a **tagged BAM** and/or **split BAMs** (`tumor.bam`, `tme.bam`, `uncertain.bam`).
-- QC plots + a self-contained **HTML report** (counts, uncertainty, evidence coverage).
-
----
-
-## What this tool can and cannot do
-
-### Can do
-
-- Enrich for tumor reads **that overlap tumor-specific somatic anchors** (SNVs) and quantify uncertainty.
-- Provide **per-read** posterior probabilities and assignment tags.
-
-### Cannot do (fundamental limitations)
-
-- Perfectly separate all reads by cell type in bulk DNA-seq.
-  Reads that do **not** overlap informative somatic loci are intrinsically ambiguous and will default to the
-  purity-based prior.
-- Separate immune subtypes (T cell vs myeloid, etc.) from DNA alone.
-
----
-
-## Installation
-
-From the repository root:
-
-```bash
-pip install .
-# or editable during development
-pip install -e ".[dev]"
+```
+gbmreadsep quickstart
 ```
 
+That prints three copy‑paste recipes and tells you exactly which output files to expect.
+
 ---
 
+## 5‑minute quickstart (BAM + VCF)
 
-## Installation (recommended)
+**Inputs you need**
+- A tumor BAM (sorted + indexed).
+- A somatic VCF for the same tumor (bgzip + tabix indexed recommended).
 
-Two supported paths are provided for easy, reproducible setup.
-
-### Option A: Conda/Mamba (recommended for non-computational users)
+**Commands**
 
 ```bash
-# from the repo root
-mamba env create -f environment.yml || mamba env update -f environment.yml
-source "$(conda info --base)/etc/profile.d/conda.sh"
-conda activate gbmreadsep
-
-# verify
+# 1) (optional) check tools
 gbmreadsep doctor
+
+# 2) run read assignment
+gbmreadsep assign \
+   --bam tumor.bam \
+   --vcf somatic.vcf.gz \
+   --outdir results/
+```
+
+**Outputs (in `results/`)**
+- `report.html` — open in a browser; a plain‑English summary and plots.
+- `assignments.tsv.gz` — per‑read posterior and class calls.
+- `summary.json` — machine‑readable run summary.
+- `plots/` — class counts and posterior histograms.
+
+---
+
+## One‑command end‑to‑end (FASTQ → report)
+
+If you have ONT FASTQ files and want everything done for you:
+
+```bash
+gbmreadsep nanopore endtoend \
+   --tumor-fastq tumor.fq.gz \
+   --normal-fastq normal.fq.gz \
+   --ref ref.fa \
+   --outdir ont_run/
+```
+
+This runs:
+1) alignment → BAM
+2) somatic calling → VCF
+3) read assignment → report
+
+Outputs:
+- `ont_run/report.html` — top‑level pipeline report.
+- `ont_run/readsep/report.html` — read assignment report.
+
+---
+
+## Output folder tour (what each file means)
+
+**For `gbmreadsep assign`:**
+- `report.html`: the main report you should share with collaborators.
+- `assignments.tsv.gz`: each read with posterior (`p_tumor`), evidence count, and class.
+- `summary.json`: totals and parameters used.
+- `plots/`: PNGs used in the report.
+- `anchor_stats.json`: counts of anchors used and filters applied.
+- `logs/assign.log`: detailed logs (for troubleshooting).
+
+**For `gbmreadsep nanopore endtoend`:**
+- `alignment/`: aligned BAM(s).
+- `somatic_vcf/`: called VCFs.
+- `readsep/`: read separation outputs (same layout as `assign`).
+- `pipeline_summary.json`: end‑to‑end summary.
+- `logs/pipeline.log`: detailed logs.
+
+---
+
+## Safety features (recommended)
+
+- `--dry-run`: validate inputs and print commands without running tools.
+- `--resume`: skip steps that already produced outputs.
+- Logs live under `<outdir>/logs/` for every command.
+
+---
+
+## Interpretation (in plain language)
+
+- **Posterior** (`p_tumor`): the probability a read came from tumor, given the anchors it overlaps.
+- **Uncertainty is normal.** Many reads do **not** overlap anchors, so they are expected to be **UNASSIGNED**.
+- **Tumor‑enriched BAM**: if you enable `--split-bams`, reads labeled “T” are enriched for tumor‑origin reads, not 100% pure tumor.
+
+For a deeper guide, see [docs/interpretation.md](docs/interpretation.md).
+
+---
+
+## Troubleshooting (most common fixes)
+
+- **BAM not indexed** → run:
+  ```bash
+  samtools index tumor.bam
+  ```
+
+- **VCF not bgzip/tabix indexed** → run:
+  ```bash
+  bgzip -c somatic.vcf > somatic.vcf.gz
+  tabix -p vcf somatic.vcf.gz
+  ```
+
+- **Contig mismatch (chr1 vs 1)** → use:
+  ```bash
+  gbmreadsep assign ... --contig-style ucsc
+  # or: --contig-style ensembl
+  ```
+
+- **Missing tools**: run `gbmreadsep doctor` for exact install commands.
+
+More details: [docs/troubleshooting.md](docs/troubleshooting.md).
+
+---
+
+## Toy demo (runs in < 1 minute)
+
+```bash
+# Generate tiny test inputs
+gbmreadsep make-toy-data --outdir toy/
+
+# Run read assignment
+gbmreadsep assign --bam toy/tumor.bam --vcf toy/anchors.vcf.gz --outdir toy_out/
+
+# Open the report
+open toy_out/report.html  # macOS
+xdg-open toy_out/report.html  # Linux
+```
+
+This is the fastest way to sanity‑check installation and understand outputs.
+
+---
+
+## Guided mode (interactive)
+
+If you want step‑by‑step prompts:
+
+```bash
+gbmreadsep wizard
+```
+
+You’ll be asked about file paths, purity, and tumor‑only vs tumor‑normal. The wizard prints the final command and can run it for you.
+
+---
+
+## Documentation map
+
+- [docs/USER_JOURNEY.md](docs/USER_JOURNEY.md) — end‑to‑end workflows and expectations
+- [docs/tutorial_bam_vcf.md](docs/tutorial_bam_vcf.md) — BAM+VCF step‑by‑step
+- [docs/tutorial_fastq_end2end.md](docs/tutorial_fastq_end2end.md) — FASTQ end‑to‑end
+- [docs/interpretation.md](docs/interpretation.md) — how to read posteriors and plots
+- [docs/troubleshooting.md](docs/troubleshooting.md) — error catalog with fixes
+- [docs/faq.md](docs/faq.md) — purity, tumor‑only pitfalls, expected rates
+- [docs/glossary.md](docs/glossary.md) — plain‑language definitions
+
+---
+
+## Minimal conceptual background
+
+GBMReadSep uses **somatic SNVs** as anchors. If a read overlaps an anchor, it provides evidence for tumor or non‑tumor origin. Many reads will never touch an anchor, especially at typical WGS coverage, so a large **UNASSIGNED** fraction is normal and expected.
+
+---
+
+## Development
+
+```bash
+# create env
+mamba env create -f environment.yml
+
+# dev install
+pip install -e .[dev]
+
+# tests
 pytest -q
 ```
-
-### Option B: Ubuntu/Debian venv + apt (minimal)
-
-```bash
-bash scripts/bootstrap_ubuntu.sh
-```
-
-You can also use:
-
-```bash
-bash scripts/bootstrap_conda.sh
-```
-
-### Makefile shortcuts
-
-```bash
-make env
-make doctor
-make test
-```
-
-
-## Quickstart
-
-You need:
-
-1. A coordinate-sorted, indexed BAM (`.bam` + `.bai`)
-2. A somatic VCF (`.vcf`/`.vcf.gz`) containing tumor-specific variants (preferably tumor-normal calling)
-
-Run:
-
-```bash
-gbmreadsep assign \
-  --bam tumor.sorted.bam \
-  --vcf somatic.vcf.gz \
-  --sample TUMOR \
-  --outdir results \
-  --purity 0.6 \
-  --write-tagged-bam results/tagged.bam \
-  --split-bams
-```
-
-Open:
-
-- `results/report.html`
-
----
-
-## Oxford Nanopore WGS helpers
-
-GBMReadSep core functionality only needs **BAM + somatic VCF**.
-For **Oxford Nanopore WGS**, the package also provides optional helper commands to:
-
-- align FASTQ → BAM (minimap2 + samtools)
-- call somatic variants from ONT BAM(s) using **ClairS** (tumor/normal) or **ClairS-TO** (tumor-only)
-- run an end-to-end pipeline FASTQ/BAM → VCF → read-separation report
-
-### Prerequisites (Nanopore end-to-end)
-
-- `minimap2` and `samtools` in your `PATH` (only needed if you start from FASTQ)
-- Docker (recommended) for ClairS/ClairS-TO, or a native install of those tools
-
-Check your setup:
-
-```bash
-gbmreadsep doctor
-```
-
-### End-to-end: FASTQ → VCF → read separation
-
-Tumor-only:
-
-```bash
-gbmreadsep nanopore endtoend \
-  --tumor-fastq tumor.fastq.gz \
-  --ref GRCh38.fa \
-  --outdir results_ont \
-  --threads 16
-```
-
-Tumor + matched normal:
-
-```bash
-gbmreadsep nanopore endtoend \
-  --tumor-fastq tumor.fastq.gz \
-  --normal-fastq normal.fastq.gz \
-  --ref GRCh38.fa \
-  --outdir results_ont \
-  --threads 16
-```
-
-If you already have aligned BAM(s):
-
-```bash
-gbmreadsep nanopore endtoend \
-  --tumor-bam tumor.sorted.bam \
-  --normal-bam normal.sorted.bam \
-  --ref GRCh38.fa \
-  --outdir results_ont
-```
-
-Top-level report:
-
-- `results_ont/report.html` (links to the read-separation report)
-
-### Just get a somatic VCF
-
-Tumor-only (ClairS-TO):
-
-```bash
-gbmreadsep nanopore call-vcf \
-  --tumor-bam tumor.sorted.bam \
-  --ref GRCh38.fa \
-  --outdir somatic_vcf \
-  --threads 16
-```
-
-Tumor/normal (ClairS):
-
-```bash
-gbmreadsep nanopore call-vcf \
-  --tumor-bam tumor.sorted.bam \
-  --normal-bam normal.sorted.bam \
-  --ref GRCh38.fa \
-  --outdir somatic_vcf \
-  --threads 16
-```
-
-The command prints the VCF path and also writes `call_vcf_summary.json`.
-
----
-
-## Outputs
-
-Core (`assign`) output directory contains:
-
-- `report.html` – main human-readable report
-- `assignments.tsv.gz` – per-read assignments (`TP`, class, evidence count, etc.)
-- `summary.json` – machine-readable summary
-- `anchor_stats.json` – anchor selection stats
-- `plots/*.png` – QC plots
-- `tagged.bam` – if requested
-- `tumor.bam`, `tme.bam`, `uncertain.bam` – if `--split-bams`
-
-Nanopore (`nanopore endtoend`) output directory contains:
-
-- `alignment/` – BAMs if you started from FASTQ
-- `somatic_vcf/` – somatic VCF(s)
-- `readsep/` – read separation outputs (including `readsep/report.html`)
-- `report.html` – top-level pipeline report linking everything
-
----
-
-## Interpretation tips
-
-- Expect a large fraction of reads with `TE=0` (no anchors overlapped). Those reads default to the purity prior.
-- Treat `T` as **tumor-enriched**, not perfectly tumor-only.
-- Treat `N` as **non-tumor-enriched** (TME/normal), not immune-specific.
-
----
-
-## Documentation
-
-- `docs/tutorial.md` – step-by-step starting from BAM + somatic VCF
-- `docs/nanopore_tutorial.md` – step-by-step ONT WGS workflow (BAM/FASTQ → VCF → assignment)
-- `docs/limitations.md` – interpretation caveats
-
----
-
-## License
-
-MIT.

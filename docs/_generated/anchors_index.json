@@ -1,0 +1,443 @@
+{
+  "gbmreadsep.anchor_index.AnchorRecord": {
+    "path": "src/gbmreadsep/anchor_index.py",
+    "start": 12,
+    "end": 18,
+    "hash8": "ee02896f",
+    "anchor_tag": "src/gbmreadsep/anchor_index.py:L12-L18#ee02896f"
+  },
+  "gbmreadsep.anchor_index.build_index": {
+    "path": "src/gbmreadsep/anchor_index.py",
+    "start": 52,
+    "end": 119,
+    "hash8": "29fbc4d7",
+    "anchor_tag": "src/gbmreadsep/anchor_index.py:L52-L119#29fbc4d7"
+  },
+  "gbmreadsep.anchor_index.verify_index": {
+    "path": "src/gbmreadsep/anchor_index.py",
+    "start": 122,
+    "end": 150,
+    "hash8": "450e2586",
+    "anchor_tag": "src/gbmreadsep/anchor_index.py:L122-L150#450e2586"
+  },
+  "gbmreadsep.anchors.AnchorIndex": {
+    "path": "src/gbmreadsep/anchors.py",
+    "start": 20,
+    "end": 24,
+    "hash8": "6ef4e865",
+    "anchor_tag": "src/gbmreadsep/anchors.py:L20-L24#6ef4e865"
+  },
+  "gbmreadsep.anchors.build_anchor_index": {
+    "path": "src/gbmreadsep/anchors.py",
+    "start": 326,
+    "end": 337,
+    "hash8": "6602c9a6",
+    "anchor_tag": "src/gbmreadsep/anchors.py:L326-L337#6602c9a6"
+  },
+  "gbmreadsep.anchors.estimate_purity_from_vafs": {
+    "path": "src/gbmreadsep/anchors.py",
+    "start": 83,
+    "end": 105,
+    "hash8": "b6365bc9",
+    "anchor_tag": "src/gbmreadsep/anchors.py:L83-L105#b6365bc9"
+  },
+  "gbmreadsep.anchors.load_anchor_variants": {
+    "path": "src/gbmreadsep/anchors.py",
+    "start": 108,
+    "end": 323,
+    "hash8": "dc39073c",
+    "anchor_tag": "src/gbmreadsep/anchors.py:L108-L323#dc39073c"
+  },
+  "gbmreadsep.assigner.assign_bam": {
+    "path": "src/gbmreadsep/assigner.py",
+    "start": 209,
+    "end": 400,
+    "hash8": "b5e5c620",
+    "anchor_tag": "src/gbmreadsep/assigner.py:L209-L400#b5e5c620"
+  },
+  "gbmreadsep.assigner.assign_read": {
+    "path": "src/gbmreadsep/assigner.py",
+    "start": 151,
+    "end": 206,
+    "hash8": "bbb37d47",
+    "anchor_tag": "src/gbmreadsep/assigner.py:L151-L206#bbb37d47"
+  },
+  "gbmreadsep.assigner.extract_bases_at_positions": {
+    "path": "src/gbmreadsep/assigner.py",
+    "start": 75,
+    "end": 137,
+    "hash8": "9eb88be1",
+    "anchor_tag": "src/gbmreadsep/assigner.py:L75-L137#9eb88be1"
+  },
+  "gbmreadsep.assigner.iter_candidate_anchors_for_read": {
+    "path": "src/gbmreadsep/assigner.py",
+    "start": 140,
+    "end": 148,
+    "hash8": "fa3ec94f",
+    "anchor_tag": "src/gbmreadsep/assigner.py:L140-L148#fa3ec94f"
+  },
+  "gbmreadsep.assigner.llr_for_observation": {
+    "path": "src/gbmreadsep/assigner.py",
+    "start": 45,
+    "end": 72,
+    "hash8": "d02eabe8",
+    "anchor_tag": "src/gbmreadsep/assigner.py:L45-L72#d02eabe8"
+  },
+  "gbmreadsep.cli.build_parser": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 132,
+    "end": 485,
+    "hash8": "024b8def",
+    "anchor_tag": "src/gbmreadsep/cli.py:L132-L485#024b8def"
+  },
+  "gbmreadsep.cli.cmd_assign": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 646,
+    "end": 758,
+    "hash8": "528c2458",
+    "anchor_tag": "src/gbmreadsep/cli.py:L646-L758#528c2458"
+  },
+  "gbmreadsep.cli.cmd_doctor": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 761,
+    "end": 788,
+    "hash8": "89c88725",
+    "anchor_tag": "src/gbmreadsep/cli.py:L761-L788#89c88725"
+  },
+  "gbmreadsep.cli.cmd_make_toy_data": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 635,
+    "end": 643,
+    "hash8": "a765a060",
+    "anchor_tag": "src/gbmreadsep/cli.py:L635-L643#a765a060"
+  },
+  "gbmreadsep.cli.cmd_nanopore_align": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 796,
+    "end": 834,
+    "hash8": "1bc8ada6",
+    "anchor_tag": "src/gbmreadsep/cli.py:L796-L834#1bc8ada6"
+  },
+  "gbmreadsep.cli.cmd_nanopore_call_vcf": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 837,
+    "end": 883,
+    "hash8": "14b1c4c9",
+    "anchor_tag": "src/gbmreadsep/cli.py:L837-L883#14b1c4c9"
+  },
+  "gbmreadsep.cli.cmd_nanopore_endtoend": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 886,
+    "end": 972,
+    "hash8": "8803159d",
+    "anchor_tag": "src/gbmreadsep/cli.py:L886-L972#8803159d"
+  },
+  "gbmreadsep.cli.cmd_quickstart": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 492,
+    "end": 521,
+    "hash8": "53c1f533",
+    "anchor_tag": "src/gbmreadsep/cli.py:L492-L521#53c1f533"
+  },
+  "gbmreadsep.cli.cmd_wizard": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 538,
+    "end": 632,
+    "hash8": "268fafe6",
+    "anchor_tag": "src/gbmreadsep/cli.py:L538-L632#268fafe6"
+  },
+  "gbmreadsep.cli.main": {
+    "path": "src/gbmreadsep/cli.py",
+    "start": 975,
+    "end": 999,
+    "hash8": "6b3f5736",
+    "anchor_tag": "src/gbmreadsep/cli.py:L975-L999#6b3f5736"
+  },
+  "gbmreadsep.doctor.CheckResult": {
+    "path": "src/gbmreadsep/doctor.py",
+    "start": 27,
+    "end": 31,
+    "hash8": "06a3de9c",
+    "anchor_tag": "src/gbmreadsep/doctor.py:L27-L31#06a3de9c"
+  },
+  "gbmreadsep.doctor.check_docker": {
+    "path": "src/gbmreadsep/doctor.py",
+    "start": 50,
+    "end": 78,
+    "hash8": "06cd46be",
+    "anchor_tag": "src/gbmreadsep/doctor.py:L50-L78#06cd46be"
+  },
+  "gbmreadsep.doctor.check_executable": {
+    "path": "src/gbmreadsep/doctor.py",
+    "start": 43,
+    "end": 47,
+    "hash8": "de4b4ec1",
+    "anchor_tag": "src/gbmreadsep/doctor.py:L43-L47#de4b4ec1"
+  },
+  "gbmreadsep.doctor.check_python": {
+    "path": "src/gbmreadsep/doctor.py",
+    "start": 38,
+    "end": 40,
+    "hash8": "b3583c67",
+    "anchor_tag": "src/gbmreadsep/doctor.py:L38-L40#b3583c67"
+  },
+  "gbmreadsep.doctor.collect_checks": {
+    "path": "src/gbmreadsep/doctor.py",
+    "start": 81,
+    "end": 123,
+    "hash8": "6459291c",
+    "anchor_tag": "src/gbmreadsep/doctor.py:L81-L123#6459291c"
+  },
+  "gbmreadsep.external.DockerMount": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 240,
+    "end": 243,
+    "hash8": "c69fdc4f",
+    "anchor_tag": "src/gbmreadsep/external.py:L240-L243#c69fdc4f"
+  },
+  "gbmreadsep.external.ExternalCommandError": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 27,
+    "end": 43,
+    "hash8": "697bc54f",
+    "anchor_tag": "src/gbmreadsep/external.py:L27-L43#697bc54f"
+  },
+  "gbmreadsep.external.build_docker_mounts": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 246,
+    "end": 285,
+    "hash8": "0bfcef84",
+    "anchor_tag": "src/gbmreadsep/external.py:L246-L285#0bfcef84"
+  },
+  "gbmreadsep.external.cmd_to_str": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 46,
+    "end": 47,
+    "hash8": "54584f6d",
+    "anchor_tag": "src/gbmreadsep/external.py:L46-L47#54584f6d"
+  },
+  "gbmreadsep.external.docker_run": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 288,
+    "end": 343,
+    "hash8": "b3ae2af9",
+    "anchor_tag": "src/gbmreadsep/external.py:L288-L343#b3ae2af9"
+  },
+  "gbmreadsep.external.ensure_executable_in_path": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 50,
+    "end": 66,
+    "hash8": "1c472360",
+    "anchor_tag": "src/gbmreadsep/external.py:L50-L66#1c472360"
+  },
+  "gbmreadsep.external.run_command": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 69,
+    "end": 129,
+    "hash8": "1806c3a9",
+    "anchor_tag": "src/gbmreadsep/external.py:L69-L129#1806c3a9"
+  },
+  "gbmreadsep.external.run_pipe": {
+    "path": "src/gbmreadsep/external.py",
+    "start": 141,
+    "end": 226,
+    "hash8": "56d4d3e1",
+    "anchor_tag": "src/gbmreadsep/external.py:L141-L226#56d4d3e1"
+  },
+  "gbmreadsep.models.AnchorVariant": {
+    "path": "src/gbmreadsep/models.py",
+    "start": 8,
+    "end": 41,
+    "hash8": "d4d333ee",
+    "anchor_tag": "src/gbmreadsep/models.py:L8-L41#d4d333ee"
+  },
+  "gbmreadsep.models.ReadAssignment": {
+    "path": "src/gbmreadsep/models.py",
+    "start": 45,
+    "end": 58,
+    "hash8": "7fd9890e",
+    "anchor_tag": "src/gbmreadsep/models.py:L45-L58#7fd9890e"
+  },
+  "gbmreadsep.nanopore.align.align_ont_fastq_to_bam": {
+    "path": "src/gbmreadsep/nanopore/align.py",
+    "start": 98,
+    "end": 245,
+    "hash8": "f6619b9b",
+    "anchor_tag": "src/gbmreadsep/nanopore/align.py:L98-L245#f6619b9b"
+  },
+  "gbmreadsep.nanopore.align.build_alignment_commands": {
+    "path": "src/gbmreadsep/nanopore/align.py",
+    "start": 35,
+    "end": 95,
+    "hash8": "614a8059",
+    "anchor_tag": "src/gbmreadsep/nanopore/align.py:L35-L95#614a8059"
+  },
+  "gbmreadsep.nanopore.pipeline.nanopore_endtoend": {
+    "path": "src/gbmreadsep/nanopore/pipeline.py",
+    "start": 118,
+    "end": 342,
+    "hash8": "a7289521",
+    "anchor_tag": "src/gbmreadsep/nanopore/pipeline.py:L118-L342#a7289521"
+  },
+  "gbmreadsep.nanopore.somatic.build_somatic_commands": {
+    "path": "src/gbmreadsep/nanopore/somatic.py",
+    "start": 96,
+    "end": 265,
+    "hash8": "ba7a0962",
+    "anchor_tag": "src/gbmreadsep/nanopore/somatic.py:L96-L265#ba7a0962"
+  },
+  "gbmreadsep.nanopore.somatic.call_somatic_vcf": {
+    "path": "src/gbmreadsep/nanopore/somatic.py",
+    "start": 268,
+    "end": 501,
+    "hash8": "74f7d42e",
+    "anchor_tag": "src/gbmreadsep/nanopore/somatic.py:L268-L501#74f7d42e"
+  },
+  "gbmreadsep.plotting.plot_class_counts": {
+    "path": "src/gbmreadsep/plotting.py",
+    "start": 35,
+    "end": 58,
+    "hash8": "4648ccf8",
+    "anchor_tag": "src/gbmreadsep/plotting.py:L35-L58#4648ccf8"
+  },
+  "gbmreadsep.plotting.plot_evidence_hist": {
+    "path": "src/gbmreadsep/plotting.py",
+    "start": 61,
+    "end": 95,
+    "hash8": "d02dbbe4",
+    "anchor_tag": "src/gbmreadsep/plotting.py:L61-L95#d02dbbe4"
+  },
+  "gbmreadsep.plotting.plot_posterior_hist": {
+    "path": "src/gbmreadsep/plotting.py",
+    "start": 12,
+    "end": 32,
+    "hash8": "bc25e7a7",
+    "anchor_tag": "src/gbmreadsep/plotting.py:L12-L32#bc25e7a7"
+  },
+  "gbmreadsep.plotting.plot_uncertainty_hist": {
+    "path": "src/gbmreadsep/plotting.py",
+    "start": 98,
+    "end": 156,
+    "hash8": "28ca59ae",
+    "anchor_tag": "src/gbmreadsep/plotting.py:L98-L156#28ca59ae"
+  },
+  "gbmreadsep.report.render_report": {
+    "path": "src/gbmreadsep/report.py",
+    "start": 133,
+    "end": 170,
+    "hash8": "57c02ed2",
+    "anchor_tag": "src/gbmreadsep/report.py:L133-L170#57c02ed2"
+  },
+  "gbmreadsep.toy_data.make_toy_data": {
+    "path": "src/gbmreadsep/toy_data.py",
+    "start": 45,
+    "end": 149,
+    "hash8": "b15126af",
+    "anchor_tag": "src/gbmreadsep/toy_data.py:L45-L149#b15126af"
+  },
+  "gbmreadsep.utils.chunked": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 69,
+    "end": 77,
+    "hash8": "e35d9259",
+    "anchor_tag": "src/gbmreadsep/utils.py:L69-L77#e35d9259"
+  },
+  "gbmreadsep.utils.clamp": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 18,
+    "end": 19,
+    "hash8": "3ab2c2b8",
+    "anchor_tag": "src/gbmreadsep/utils.py:L18-L19#3ab2c2b8"
+  },
+  "gbmreadsep.utils.dataclass_to_jsonable": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 65,
+    "end": 66,
+    "hash8": "bbd7baa5",
+    "anchor_tag": "src/gbmreadsep/utils.py:L65-L66#bbd7baa5"
+  },
+  "gbmreadsep.utils.ensure_outdir": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 43,
+    "end": 46,
+    "hash8": "9f17fed3",
+    "anchor_tag": "src/gbmreadsep/utils.py:L43-L46#9f17fed3"
+  },
+  "gbmreadsep.utils.logit": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 22,
+    "end": 24,
+    "hash8": "06ee8f04",
+    "anchor_tag": "src/gbmreadsep/utils.py:L22-L24#06ee8f04"
+  },
+  "gbmreadsep.utils.open_textmaybe_gzip": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 53,
+    "end": 57,
+    "hash8": "c093d17a",
+    "anchor_tag": "src/gbmreadsep/utils.py:L53-L57#c093d17a"
+  },
+  "gbmreadsep.utils.phred_to_error_prob": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 36,
+    "end": 40,
+    "hash8": "52c80e90",
+    "anchor_tag": "src/gbmreadsep/utils.py:L36-L40#52c80e90"
+  },
+  "gbmreadsep.utils.sigmoid": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 27,
+    "end": 33,
+    "hash8": "9add4e38",
+    "anchor_tag": "src/gbmreadsep/utils.py:L27-L33#9add4e38"
+  },
+  "gbmreadsep.utils.which": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 49,
+    "end": 50,
+    "hash8": "12e0dad5",
+    "anchor_tag": "src/gbmreadsep/utils.py:L49-L50#12e0dad5"
+  },
+  "gbmreadsep.utils.write_json": {
+    "path": "src/gbmreadsep/utils.py",
+    "start": 60,
+    "end": 62,
+    "hash8": "e2ac3648",
+    "anchor_tag": "src/gbmreadsep/utils.py:L60-L62#e2ac3648"
+  },
+  "gbmreadsep.validation.check_bam_index": {
+    "path": "src/gbmreadsep/validation.py",
+    "start": 13,
+    "end": 22,
+    "hash8": "ff4d9513",
+    "anchor_tag": "src/gbmreadsep/validation.py:L13-L22#ff4d9513"
+  },
+  "gbmreadsep.validation.check_vcf_index": {
+    "path": "src/gbmreadsep/validation.py",
+    "start": 25,
+    "end": 43,
+    "hash8": "4005534a",
+    "anchor_tag": "src/gbmreadsep/validation.py:L25-L43#4005534a"
+  },
+  "gbmreadsep.validation.detect_contig_style": {
+    "path": "src/gbmreadsep/validation.py",
+    "start": 46,
+    "end": 54,
+    "hash8": "0ea23bbb",
+    "anchor_tag": "src/gbmreadsep/validation.py:L46-L54#0ea23bbb"
+  },
+  "gbmreadsep.validation.remap_contig": {
+    "path": "src/gbmreadsep/validation.py",
+    "start": 57,
+    "end": 72,
+    "hash8": "1bafb426",
+    "anchor_tag": "src/gbmreadsep/validation.py:L57-L72#1bafb426"
+  },
+  "gbmreadsep.validation.remap_contigs": {
+    "path": "src/gbmreadsep/validation.py",
+    "start": 75,
+    "end": 77,
+    "hash8": "9e87bf37",
+    "anchor_tag": "src/gbmreadsep/validation.py:L75-L77#9e87bf37"
+  }
+}
