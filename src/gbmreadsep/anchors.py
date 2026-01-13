@@ -11,6 +11,10 @@ from .utils import clamp
 
 logger = logging.getLogger(__name__)
 
+_MIN_ANCHORS_WARNING = 50
+_HIGH_VAF_WINDOW = (0.45, 0.55)
+_HIGH_VAF_FRACTION_WARN = 0.3
+
 
 @dataclass(frozen=True)
 class AnchorIndex:
@@ -298,6 +302,24 @@ def load_anchor_variants(
     # Sort by chrom then pos; keep original contig ordering from BAM later.
     anchors.sort(key=lambda a: (a.chrom, a.pos0))
     stats["anchors_kept"] = len(anchors)
+
+    if len(anchors) < _MIN_ANCHORS_WARNING:
+        logger.warning(
+            "Only %d anchors found. Read-level assignments may be noisy. "
+            "Consider lowering filters or providing more anchors.",
+            len(anchors),
+        )
+
+    vafs_present = [a.vaf for a in anchors if a.vaf is not None]
+    if vafs_present:
+        lo, hi = _HIGH_VAF_WINDOW
+        frac = sum(1 for v in vafs_present if lo <= float(v) <= hi) / float(len(vafs_present))
+        if frac >= _HIGH_VAF_FRACTION_WARN:
+            logger.warning(
+                "Many anchors have VAF near 0.5 (%.0f%%). This can indicate germline variants; "
+                "consider tumor-normal calling or germline filtering.",
+                frac * 100.0,
+            )
     return anchors, purity_used, stats
 
 

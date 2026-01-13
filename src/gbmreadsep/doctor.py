@@ -85,23 +85,38 @@ def collect_checks() -> Dict[str, CheckResult]:
     checks["python"] = check_python()
     checks["minimap2"] = check_executable(
         "minimap2",
-        howto="Install via conda/mamba: mamba install -c bioconda minimap2",
+        howto=(
+            "Ubuntu: sudo apt-get install -y minimap2\n"
+            "Conda/mamba: mamba install -c bioconda minimap2"
+        ),
     )
     checks["samtools"] = check_executable(
         "samtools",
-        howto="Install via conda/mamba: mamba install -c bioconda samtools",
+        howto=(
+            "Ubuntu: sudo apt-get install -y samtools\n"
+            "Conda/mamba: mamba install -c bioconda samtools"
+        ),
     )
     checks["bcftools"] = check_executable(
         "bcftools",
-        howto="Install via conda/mamba: mamba install -c bioconda bcftools",
+        howto=(
+            "Ubuntu: sudo apt-get install -y bcftools\n"
+            "Conda/mamba: mamba install -c bioconda bcftools"
+        ),
     )
     checks["tabix"] = check_executable(
         "tabix",
-        howto="Install via conda/mamba: mamba install -c bioconda tabix",
+        howto=(
+            "Ubuntu: sudo apt-get install -y tabix\n"
+            "Conda/mamba: mamba install -c bioconda tabix"
+        ),
     )
     checks["pigz"] = check_executable(
         "pigz",
-        howto="Install via conda/mamba: mamba install -c conda-forge pigz",
+        howto=(
+            "Ubuntu: sudo apt-get install -y pigz\n"
+            "Conda/mamba: mamba install -c conda-forge pigz"
+        ),
     )
     checks["docker"] = check_docker()
 

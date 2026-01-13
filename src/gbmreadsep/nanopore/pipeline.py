@@ -5,7 +5,9 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, Optional, Sequence
+
+from contextlib import contextmanager
 
 from jinja2 import Template
 
@@ -19,6 +21,23 @@ from .align import align_ont_fastq_to_bam
 from .somatic import call_somatic_vcf
 
 logger = logging.getLogger(__name__)
+
+
+_LOG_FMT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+
+
+@contextmanager
+def _step_log(path: Path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handler = logging.FileHandler(path)
+    handler.setFormatter(logging.Formatter(_LOG_FMT))
+    root_logger = logging.getLogger()
+    root_logger.addHandler(handler)
+    try:
+        yield
+    finally:
+        root_logger.removeHandler(handler)
+        handler.close()
 
 
 _PIPELINE_TEMPLATE = Template(
@@ -115,6 +134,8 @@ def nanopore_endtoend(
     skip_duplicates: bool = True,
     split_bams: bool = True,
     write_tagged_bam: bool = True,
+    dry_run: bool = False,
+    resume: bool = False,
 ) -> Path:
     """Run FASTQ/BAM → somatic VCF → read separation.
 
@@ -124,13 +145,16 @@ def nanopore_endtoend(
         Path to the top-level pipeline HTML report.
     """
     t0 = time.time()
-    outdir_p = ensure_outdir(outdir)
+    outdir_p = Path(outdir).expanduser().resolve()
 
-    alignment_dir = ensure_outdir(outdir_p / "alignment")
-    vcf_dir = ensure_outdir(outdir_p / "somatic_vcf")
-    readsep_dir = ensure_outdir(outdir_p / "readsep")
+    alignment_dir = outdir_p / "alignment"
+    vcf_dir = outdir_p / "somatic_vcf"
+    readsep_dir = outdir_p / "readsep"
 
     ref_fa_p = Path(ref_fa).expanduser().resolve()
+
+    if dry_run:
+        logger.info("Dry-run: building planned commands for alignment and calling.")
 
     # 1) Alignment (optional)
     aln_summary: Dict[str, Any] = {}
@@ -139,13 +163,16 @@ def nanopore_endtoend(
         if not tumor_fastq:
             raise ValueError("Provide either tumor_bam or tumor_fastq")
         tumor_bam_p = alignment_dir / "tumor.bam"
-        aln_summary["tumor"] = align_ont_fastq_to_bam(
-            fastq=tumor_fastq,
-            ref_fa=ref_fa_p,
-            out_bam=tumor_bam_p,
-            threads=threads,
-            minimap2_preset=minimap2_preset,
-        )
+        with _step_log(outdir_p / "logs" / "alignment.log"):
+            aln_summary["tumor"] = align_ont_fastq_to_bam(
+                fastq=tumor_fastq,
+                ref_fa=ref_fa_p,
+                out_bam=tumor_bam_p,
+                threads=threads,
+                minimap2_preset=minimap2_preset,
+                dry_run=dry_run,
+                resume=resume,
+            )
     else:
         tumor_bam_p = Path(tumor_bam).expanduser().resolve()
 
@@ -154,32 +181,51 @@ def nanopore_endtoend(
         normal_bam_p = Path(normal_bam).expanduser().resolve()
     elif normal_fastq:
         normal_bam_p = alignment_dir / "normal.bam"
-        aln_summary["normal"] = align_ont_fastq_to_bam(
-            fastq=normal_fastq,
-            ref_fa=ref_fa_p,
-            out_bam=normal_bam_p,
-            threads=threads,
-            minimap2_preset=minimap2_preset,
-        )
+        with _step_log(outdir_p / "logs" / "alignment.log"):
+            aln_summary["normal"] = align_ont_fastq_to_bam(
+                fastq=normal_fastq,
+                ref_fa=ref_fa_p,
+                out_bam=normal_bam_p,
+                threads=threads,
+                minimap2_preset=minimap2_preset,
+                dry_run=dry_run,
+                resume=resume,
+            )
 
     # 2) Somatic VCF calling
-    vcf_summary = call_somatic_vcf(
-        tumor_bam=tumor_bam_p,
-        normal_bam=normal_bam_p,
-        ref_fa=ref_fa_p,
-        outdir=vcf_dir,
-        threads=threads,
-        platform=platform,
-        engine=caller_engine,
-        sample_name="TUMOR" if normal_bam_p is not None else "SAMPLE",
-    )
+    with _step_log(outdir_p / "logs" / "caller.log"):
+        vcf_summary = call_somatic_vcf(
+            tumor_bam=tumor_bam_p,
+            normal_bam=normal_bam_p,
+            ref_fa=ref_fa_p,
+            outdir=vcf_dir,
+            threads=threads,
+            platform=platform,
+            engine=caller_engine,
+            sample_name="TUMOR" if normal_bam_p is not None else "SAMPLE",
+            dry_run=dry_run,
+            resume=resume,
+        )
 
     if vcf_summary.get("caller") == "clairs":
-        vcf_path = Path(str(vcf_summary["out_vcf"]))
+        vcf_path = Path(str(vcf_summary.get("out_vcf")))
     else:
-        vcf_path = Path(str(vcf_summary["out_snv_vcf"]))
+        vcf_path = Path(str(vcf_summary.get("out_snv_vcf")))
+
+    if dry_run:
+        logger.info("Dry-run: would assign reads using %s and %s", tumor_bam_p, vcf_path)
+        return outdir_p / "report.html"
+
+    outdir_p = ensure_outdir(outdir_p)
+    alignment_dir = ensure_outdir(alignment_dir)
+    vcf_dir = ensure_outdir(vcf_dir)
+    readsep_dir = ensure_outdir(readsep_dir)
 
     # 3) Read separation
+    if resume and (readsep_dir / "summary.json").exists():
+        logger.info("Resume enabled: read separation summary already exists.")
+        return outdir_p / "report.html"
+
     anchors, purity_used, anchor_stats = load_anchor_variants(
         str(vcf_path),
         sample=None,
@@ -193,22 +239,23 @@ def nanopore_endtoend(
     if write_tagged_bam:
         tagged_bam_path = readsep_dir / "tagged.bam"
 
-    run_summary = assign_bam(
-        bam_path=str(tumor_bam_p),
-        anchor_index_by_contig=anchor_index,
-        prior_p_tumor=float(purity_used),
-        outdir=readsep_dir,
-        tumor_threshold=tumor_threshold,
-        normal_threshold=normal_threshold,
-        min_baseq=min_baseq,
-        skip_duplicates=skip_duplicates,
-        include_secondary=False,
-        include_supplementary=False,
-        write_tagged_bam=str(tagged_bam_path) if tagged_bam_path else None,
-        split_bams=split_bams,
-        assignments_tsv_gz=str(readsep_dir / "assignments.tsv.gz"),
-        progress=True,
-    )
+    with _step_log(outdir_p / "logs" / "assign.log"):
+        run_summary = assign_bam(
+            bam_path=str(tumor_bam_p),
+            anchor_index_by_contig=anchor_index,
+            prior_p_tumor=float(purity_used),
+            outdir=readsep_dir,
+            tumor_threshold=tumor_threshold,
+            normal_threshold=normal_threshold,
+            min_baseq=min_baseq,
+            skip_duplicates=skip_duplicates,
+            include_secondary=False,
+            include_supplementary=False,
+            write_tagged_bam=str(tagged_bam_path) if tagged_bam_path else None,
+            split_bams=split_bams,
+            assignments_tsv_gz=str(readsep_dir / "assignments.tsv.gz"),
+            progress=True,
+        )
 
     # Plots + report
     plots_dir = ensure_outdir(readsep_dir / "plots")
