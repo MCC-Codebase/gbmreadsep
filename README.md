@@ -172,6 +172,30 @@ GBMReadSep uses **somatic SNVs** as anchors. If a read overlaps an anchor, it pr
 
 ---
 
+## How the module works internally (quick tour)
+
+At a high level, GBMReadSep loads somatic SNV anchors from a VCF, builds per‑contig lookup tables, and then evaluates each read in the BAM by aggregating log‑likelihood ratios across any overlapping anchors.
+
+**Core data structures**
+- `AnchorVariant`: a single somatic SNV (chrom, 0‑based position, ref/alt, VAF/DP, and tumor‑allele proxy `f_tumor`).
+- `ReadAssignment`: per‑read posterior, evidence count, and class (`T`, `N`, `U`).
+
+**Anchor loading + purity estimation**
+- `load_anchor_variants` parses the VCF, keeps PASS SNVs, applies optional DP/VAF/QUAL filters, and collects per‑record stats.
+- If purity is not provided, `estimate_purity_from_vafs` uses a conservative median heuristic over a VAF window.
+
+**Read assignment model**
+- For each read, candidate anchors are selected by genomic overlap.
+- The model computes a per‑anchor log‑likelihood ratio using a simple substitution error model that combines base quality and mapping quality.
+- The posterior is `sigmoid(logit(prior_p_tumor) + sum(llr))`, and thresholds classify the read as tumor (T), non‑tumor (N), or uncertain (U).
+
+**Outputs**
+- `assignments.tsv.gz` with per‑read posteriors and class calls.
+- `summary.json` with run parameters and counts.
+- `plots/` and `report.html` for a shareable summary.
+
+---
+
 ## Development
 
 ```bash
