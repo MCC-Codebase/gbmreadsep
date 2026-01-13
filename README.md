@@ -39,6 +39,45 @@ pip install -e ".[dev]"
 
 ---
 
+
+## Installation (recommended)
+
+Two supported paths are provided for easy, reproducible setup.
+
+### Option A: Conda/Mamba (recommended for non-computational users)
+
+```bash
+# from the repo root
+mamba env create -f environment.yml || mamba env update -f environment.yml
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate gbmreadsep
+
+# verify
+gbmreadsep doctor
+pytest -q
+```
+
+### Option B: Ubuntu/Debian venv + apt (minimal)
+
+```bash
+bash scripts/bootstrap_ubuntu.sh
+```
+
+You can also use:
+
+```bash
+bash scripts/bootstrap_conda.sh
+```
+
+### Makefile shortcuts
+
+```bash
+make env
+make doctor
+make test
+```
+
+
 ## Quickstart
 
 You need:

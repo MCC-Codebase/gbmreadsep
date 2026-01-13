@@ -1,0 +1,14 @@
+name: gbmreadsep
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - pip
+  - minimap2
+  - samtools
+  - bcftools
+  - tabix
+  - pigz
+  - pip:
+      - -e .[dev]

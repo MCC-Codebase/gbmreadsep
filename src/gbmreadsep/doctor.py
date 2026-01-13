@@ -91,6 +91,18 @@ def collect_checks() -> Dict[str, CheckResult]:
         "samtools",
         howto="Install via conda/mamba: mamba install -c bioconda samtools",
     )
+    checks["bcftools"] = check_executable(
+        "bcftools",
+        howto="Install via conda/mamba: mamba install -c bioconda bcftools",
+    )
+    checks["tabix"] = check_executable(
+        "tabix",
+        howto="Install via conda/mamba: mamba install -c bioconda tabix",
+    )
+    checks["pigz"] = check_executable(
+        "pigz",
+        howto="Install via conda/mamba: mamba install -c conda-forge pigz",
+    )
     checks["docker"] = check_docker()
 
     return checks
